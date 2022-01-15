@@ -443,8 +443,11 @@ def train(hyp, opt, device, tb_writer=None, wandb=None):
         if plots:
             plot_results(save_dir=save_dir)  # save as results.png
             if wandb:
+                # To avoid FileNotFoundError, stopping to send a 'precision-recall_curve.png'.
+                # wandb.log({"Results": [wandb.Image(str(save_dir / x), caption=x) for x in
+                #                        ['results.png', 'precision-recall_curve.png']]})
                 wandb.log({"Results": [wandb.Image(str(save_dir / x), caption=x) for x in
-                                       ['results.png', 'precision-recall_curve.png']]})
+                                       ['results.png']]})
         logger.info('%g epochs completed in %.3f hours.\n' % (epoch - start_epoch + 1, (time.time() - t0) / 3600))
     else:
         dist.destroy_process_group()
